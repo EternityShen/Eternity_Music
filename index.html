@@ -1,0 +1,125 @@
+<html lang="zh_CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="/src/style.css" rel="stylesheet">
+  <title>quantum</title>
+</head>
+
+<body>
+  <div class="h-screen overflow-hidden bg-gray-900 min-w-max flex flex-col">
+    <main class="flex-1 flex overflow-hidden min-h-0">
+      <!-- Left: Album Art (Vinyl Record) -->
+      <div class="flex-1 flex items-center justify-center p-10">
+        <div class="record-player relative w-72 h-72 lg:w-80 lg:h-80">
+          <!-- Spinning vinyl disc -->
+          <div id="recordDisc" class="record-disc w-full h-full">
+            <!-- Album art as center label -->
+            <img class="record-art" src="/default-cover.jpg">
+          </div>
+          <!-- Static glossy shine -->
+          <div class="record-shine"></div>
+          <!-- Center spindle hole -->
+          <div class="record-hole"></div>
+        </div>
+      </div>
+      <!-- Right: Lyrics -->
+      <div class="flex-1 flex flex-col p-10 pl-0 overflow-hidden">
+        <div id="lyricsContainer" class="flex-1 overflow-y-auto pr-2 space-y-3">
+          <p class="text-gray-500 text-center mt-20">暂无歌词</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Song List Drawer -->
+    <div id="songListPanel"
+      class="song-list-panel bg-gray-800/95 backdrop-blur-xl border-t border-gray-700/30">
+      <div id="songListContainer" class="h-80 overflow-y-auto p-4 space-y-1"></div>
+      <!-- Bottom bar: music directory -->
+      <div class="flex items-center justify-between px-4 py-2 border-t border-gray-700/30 bg-gray-900/50">
+        <div class="flex items-center gap-2 min-w-0 flex-1">
+          <svg class="w-3.5 h-3.5 text-gray-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+          </svg>
+          <span id="musicDirDisplay" class="text-xs text-gray-400 truncate">未选择目录</span>
+        </div>
+        <button id="selectDirBtn"
+          class="text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-1 shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+          </svg>
+          选择目录
+        </button>
+      </div>
+    </div>
+    <footer
+      class="bg-gray-800/90 backdrop-blur-xl border-t border-gray-700/30 px-6 py-3 flex items-center gap-4 select-none">
+      <!-- Left: Album info -->
+      <div class="flex items-center gap-3 min-w-0 w-60">
+        <img id="footerAlbumArt" class="w-11 h-11 rounded-lg object-cover shadow-lg ring-1 ring-white/10 shrink-0"
+          src="/default-cover.jpg">
+        <div class="min-w-0">
+          <p id="footerTitle" class="text-sm text-white font-medium truncate">未在播放</p>
+          <p id="footerArtist" class="text-xs text-gray-400 truncate">Eternity Music</p>
+        </div>
+      </div>
+
+      <div class="flex-1 flex flex-col items-center gap-0.5 max-w-2xl mx-auto">
+        <div class="flex items-center gap-5">
+          <button id="prevBtn" class="text-gray-400 hover:text-white transition-all hover:scale-110 active:scale-95">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+            </svg>
+          </button>
+          <button id="playBtn"
+            class="w-9 h-9 bg-white text-gray-900 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-white/10">
+            <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </button>
+          <button id="nextBtn" class="text-gray-400 hover:text-white transition-all hover:scale-110 active:scale-95">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+            </svg>
+          </button>
+          <button id="loopBtn" class="text-gray-500 hover:text-white transition-all hover:scale-110 active:scale-95" title="循环模式">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="w-full flex items-center gap-2">
+          <span id="currentTime" class="text-xs text-gray-400 w-8 text-right tabular-nums">0:00</span>
+          <div class="flex-1">
+            <input type="range" id="progress" min="0" max="100" value="0"
+              class="range-input w-full h-1 appearance-none bg-transparent cursor-pointer">
+          </div>
+          <span id="duration" class="text-xs text-gray-400 w-8 tabular-nums">0:00</span>
+        </div>
+      </div>
+
+      <!-- Right: Playlist + Volume -->
+      <div class="flex items-center gap-3 w-44 justify-end">
+        <button id="playlistBtn" class="text-gray-400 hover:text-white transition-colors relative" title="歌曲列表">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
+        </button>
+        <div class="w-px h-5 bg-gray-700"></div>
+        <button class="text-gray-400 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
+          </svg>
+        </button>
+        <input id="volumeSlider" type="range" min="0" max="100" value="80"
+          class="range-input w-20 h-1 appearance-none bg-transparent cursor-pointer">
+      </div>
+    </footer>
+  </div>
+</body>
+
+<script type="module" src="/src/main.ts"></script>
+
+</html>
