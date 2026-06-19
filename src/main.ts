@@ -10,7 +10,6 @@ interface Song {
   mp3_path: string
 }
 
-// ---- State ----
 let songs: Song[] = []
 let currentIndex = -1
 type LoopMode = 'none' | 'one' | 'all'
@@ -33,7 +32,6 @@ audio.addEventListener('playing', () => console.log('audio: playing'))
 audio.addEventListener('waiting', () => console.log('audio: waiting'))
 audio.addEventListener('stalled', () => console.log('audio: stalled'))
 
-// ---- DOM refs ----
 const playlistBtn = document.getElementById('playlistBtn')!
 const songListPanel = document.getElementById('songListPanel')!
 const songListContainer = document.getElementById('songListContainer')!
@@ -52,26 +50,21 @@ const volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement
 const loopBtn = document.getElementById('loopBtn')!
 const lyricsContainer = document.getElementById('lyricsContainer')!
 
-// ---- Startup: record stays still ----
 recordDisc.classList.add('paused')
 
-// ---- SVG icons ----
 const iconPlay = `<svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`
 const iconPause = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>`
 
-// ---- Song List Toggle ----
 playlistBtn.addEventListener('click', () => {
   songListPanel.classList.toggle('open')
 })
 
-// ---- Helpers ----
 function formatDuration(sec: number): string {
   const m = Math.floor(sec / 60)
   const s = sec % 60
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-// ---- Lyrics ----
 function parseLRC(text: string): { time: number; text: string }[] {
   const lines = text.split('\n')
   const result: { time: number; text: string }[] = []
@@ -131,7 +124,6 @@ function updateLyrics(time: number) {
   }
 }
 
-// ---- Render Song List ----
 function renderSongList() {
   songListContainer.innerHTML = songs
     .map(
@@ -148,7 +140,6 @@ function renderSongList() {
     .join('')
 }
 
-// ---- Play a song by index ----
 function playSong(index: number) {
   const song = songs[index]
   if (!song) return
@@ -174,7 +165,6 @@ function playSong(index: number) {
   })
 }
 
-// ---- Click song in list ----
 songListContainer.addEventListener('click', (e) => {
   const item = (e.target as HTMLElement).closest('[data-index]') as HTMLElement | null
   if (!item) return
@@ -186,7 +176,6 @@ songListContainer.addEventListener('click', (e) => {
   }
 })
 
-// ---- Play / Pause ----
 function togglePlay() {
   if (songs.length === 0) return
   if (currentIndex === -1) { playSong(0); return }
@@ -205,7 +194,6 @@ function togglePlay() {
 playBtn.addEventListener('click', togglePlay)
 recordDisc.addEventListener('click', togglePlay)
 
-// ---- Prev / Next ----
 prevBtn.addEventListener('click', () => {
   if (songs.length === 0) return
   const i = (currentIndex - 1 + songs.length) % songs.length
@@ -218,12 +206,10 @@ nextBtn.addEventListener('click', () => {
   playSong(i)
 })
 
-// ---- Volume ----
 volumeSlider.addEventListener('input', () => {
   audio.volume = parseInt(volumeSlider.value) / 100
 })
 
-// ---- Audio events ----
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration) return
   progressInput.value = String((audio.currentTime / audio.duration) * 100)
@@ -243,7 +229,6 @@ audio.addEventListener('ended', () => {
   }
 })
 
-// ---- Loop Mode ----
 const repeatSvg = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>`
 const repeatOneSvg = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/><text x="12" y="16" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor">1</text></svg>`
 
@@ -272,7 +257,6 @@ loopBtn.addEventListener('click', () => {
 })
 updateLoopBtn()
 
-// ---- Keyboard shortcuts ----
 document.addEventListener('keydown', (e) => {
   if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
 
@@ -302,13 +286,11 @@ document.addEventListener('keydown', (e) => {
   }
 })
 
-// ---- Seek via progress bar ----
 progressInput.addEventListener('input', () => {
   if (!audio.duration) return
   audio.currentTime = (parseFloat(progressInput.value) / 100) * audio.duration
 })
 
-// ---- Select Music Directory ----
 selectDirBtn.addEventListener('click', async () => {
   const dir = await open({ directory: true, multiple: false, title: '选择音乐目录' })
   if (!dir) return
@@ -327,14 +309,13 @@ selectDirBtn.addEventListener('click', async () => {
   footerArtist.textContent = 'Eternity Music'
 })
 
-// ---- Startup ----
-;(async () => {
-  const dir = localStorage.getItem('music_dir') || '/home/eternity/Music'
-  musicDirDisplay.textContent = dir
-  try {
-    songs = await invoke<Song[]>('get_music_list', { path: dir })
-    renderSongList()
-  } catch (e) {
-    console.error('自动加载失败:', e)
-  }
-})()
+  ; (async () => {
+    const dir = localStorage.getItem('music_dir') || '/home/eternity/Music'
+    musicDirDisplay.textContent = dir
+    try {
+      songs = await invoke<Song[]>('get_music_list', { path: dir })
+      renderSongList()
+    } catch (e) {
+      console.error('自动加载失败:', e)
+    }
+  })()
