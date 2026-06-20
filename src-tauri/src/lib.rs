@@ -87,7 +87,6 @@ fn get_music_list(path: &str) -> Result<Vec<Song>, String> {
             imge_path: String::new(),
         });
     }
-
     Ok(songs)
 }
 
@@ -112,7 +111,11 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![get_music_list, read_audio_file, read_text_file])
+        .invoke_handler(tauri::generate_handler![
+            get_music_list,
+            read_audio_file,
+            read_text_file
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

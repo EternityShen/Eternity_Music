@@ -43,6 +43,9 @@ npm run tauri build
 ```
 [00:12.00]歌词内容
 ```
+### 依赖(ArchLinux)
+aac解码器: gst-plugins-bad gst-libav
+
 
 ## 开源协议
 
