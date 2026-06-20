@@ -257,6 +257,8 @@ loopBtn.addEventListener('click', () => {
 })
 updateLoopBtn()
 
+document.addEventListener('contextmenu', (e) => e.preventDefault())
+
 document.addEventListener('keydown', (e) => {
   if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
 
